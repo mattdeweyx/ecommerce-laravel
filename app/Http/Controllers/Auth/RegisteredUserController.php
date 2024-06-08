@@ -28,6 +28,26 @@ class AuthController extends Controller
 
         return response()->json($user, 201);
     }
+    
+    public function Adminsignup(Request $request)
+    {
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users',
+            'password' => 'required|string|min:8',
+        ]);
+
+        $user = User::create([
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'role' => "admin",
+            'password' => Hash::make($validated['password']),
+        ]);
+
+        Auth::login($user);
+
+        return response()->json($user, 201);
+    }
 
     public function login(Request $request)
     {
